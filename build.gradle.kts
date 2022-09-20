@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.github.jklingsporn.vertx.jooq.generate.VertxGeneratorStrategy
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
@@ -15,7 +16,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jooq:jooq-codegen:3.17.4")
+    classpath("io.github.jklingsporn:vertx-jooq-generate:6.5.5")
     classpath("org.postgresql:postgresql:42.5.0")
     classpath("org.testcontainers:postgresql:1.17.3")
     classpath("org.flywaydb:flyway-core:9.3.0")
@@ -46,13 +47,15 @@ task("jooqGenerate") {
             )
             .withGenerator(
               Generator()
+                .withName("io.github.jklingsporn.vertx.jooq.generate.classic.ClassicReactiveVertxGenerator")
                 .withDatabase(Database().withInputSchema("public"))
-                .withGenerate(Generate().withPojosAsKotlinDataClasses(true))
+                .withGenerate(Generate())
                 .withTarget(
                   Target()
                     .withPackageName("co.selim.nemrut.jooq")
-                    .withDirectory("src/main/java")
+                    .withDirectory("${projectDir}/src/main/java")
                 )
+                .withStrategy(Strategy().withName("io.github.jklingsporn.vertx.jooq.generate.VertxGeneratorStrategy"))
             )
         )
       }
@@ -92,8 +95,13 @@ dependencies {
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
   implementation(kotlin("stdlib-jdk8"))
+  implementation("org.flywaydb:flyway-core:9.3.0")
+  implementation("org.postgresql:postgresql:42.5.0")
+  implementation("io.github.jklingsporn:vertx-jooq-classic-reactive:6.5.5")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  testImplementation("org.testcontainers:junit-jupiter:1.17.3")
+  testImplementation("org.testcontainers:postgresql:1.17.3")
 }
 
 val compileKotlin: KotlinCompile by tasks
