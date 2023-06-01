@@ -4,8 +4,10 @@
 package co.selim.nemrut.jooq;
 
 
+import co.selim.nemrut.jooq.tables.Company;
 import co.selim.nemrut.jooq.tables.FlywaySchemaHistory;
-import co.selim.nemrut.jooq.tables.Note;
+import co.selim.nemrut.jooq.tables.Role;
+import co.selim.nemrut.jooq.tables.Salary;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,14 +31,24 @@ public class Public extends SchemaImpl {
     public static final Public PUBLIC = new Public();
 
     /**
+     * The table <code>public.company</code>.
+     */
+    public final Company COMPANY = Company.COMPANY;
+
+    /**
      * The table <code>public.flyway_schema_history</code>.
      */
     public final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
-     * The table <code>public.note</code>.
+     * The table <code>public.role</code>.
      */
-    public final Note NOTE = Note.NOTE;
+    public final Role ROLE = Role.ROLE;
+
+    /**
+     * The table <code>public.salary</code>.
+     */
+    public final Salary SALARY = Salary.SALARY;
 
     /**
      * No further instances allowed
@@ -54,8 +66,10 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Company.COMPANY,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            Note.NOTE
+            Role.ROLE,
+            Salary.SALARY
         );
     }
 }

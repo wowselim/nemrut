@@ -4,8 +4,10 @@
 package co.selim.nemrut.jooq;
 
 
+import co.selim.nemrut.jooq.tables.Company;
 import co.selim.nemrut.jooq.tables.FlywaySchemaHistory;
-import co.selim.nemrut.jooq.tables.Note;
+import co.selim.nemrut.jooq.tables.Role;
+import co.selim.nemrut.jooq.tables.Salary;
 
 
 /**
@@ -15,12 +17,22 @@ import co.selim.nemrut.jooq.tables.Note;
 public class Tables {
 
     /**
+     * The table <code>public.company</code>.
+     */
+    public static final Company COMPANY = Company.COMPANY;
+
+    /**
      * The table <code>public.flyway_schema_history</code>.
      */
     public static final FlywaySchemaHistory FLYWAY_SCHEMA_HISTORY = FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY;
 
     /**
-     * The table <code>public.note</code>.
+     * The table <code>public.role</code>.
      */
-    public static final Note NOTE = Note.NOTE;
+    public static final Role ROLE = Role.ROLE;
+
+    /**
+     * The table <code>public.salary</code>.
+     */
+    public static final Salary SALARY = Salary.SALARY;
 }
