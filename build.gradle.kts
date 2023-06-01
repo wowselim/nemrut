@@ -23,6 +23,9 @@ buildscript {
 }
 
 task("jooqGenerate") {
+  val srcMainJava = "${projectDir}/src/main/java"
+  val packageName = "co.selim.nemrut.jooq"
+  doFirst { File(srcMainJava).resolve(packageName.replace('.', '/')).deleteRecursively() }
   doLast {
     PostgreSQLContainer<Nothing>("postgres:14.3")
       .apply { start() }
@@ -47,11 +50,17 @@ task("jooqGenerate") {
             .withGenerator(
               Generator()
                 .withDatabase(Database().withInputSchema("public"))
-                .withGenerate(Generate().withPojosAsKotlinDataClasses(true))
+                .withGenerate(
+                  Generate()
+                    .withPojos(true)
+                    .withPojosAsJavaRecordClasses(true)
+                    .withPojosToString(false)
+                    .withPojosEqualsAndHashCode(false)
+                )
                 .withTarget(
                   Target()
-                    .withPackageName("co.selim.nemrut.jooq")
-                    .withDirectory("src/main/java")
+                    .withPackageName(packageName)
+                    .withDirectory(srcMainJava)
                 )
             )
         )
@@ -60,9 +69,9 @@ task("jooqGenerate") {
 }
 
 plugins {
-  kotlin("jvm") version "1.7.10"
+  kotlin("jvm") version "1.8.21"
   application
-  id("com.github.johnrengelman.shadow") version "7.0.0"
+  id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "co.selim"
@@ -72,8 +81,8 @@ repositories {
   mavenCentral()
 }
 
-val vertxVersion = "4.3.3"
-val junitJupiterVersion = "5.7.0"
+val vertxVersion = "4.4.2"
+val junitJupiterVersion = "5.9.3"
 
 val mainVerticleName = "co.selim.nemrut.MainVerticle"
 val launcherClassName = "io.vertx.core.Launcher"
@@ -86,18 +95,45 @@ application {
 }
 
 dependencies {
+  implementation(kotlin("stdlib-jdk8"))
   implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
   implementation("io.vertx:vertx-web")
-  implementation("io.vertx:vertx-pg-client")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
-  implementation(kotlin("stdlib-jdk8"))
+
+  compileOnly("org.slf4j:slf4j-api:2.0.7")
+  runtimeOnly("org.slf4j:slf4j-simple:2.0.7")
+
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+  implementation("io.insert-koin:koin-core-jvm:3.4.0")
+
+  implementation("io.agroal:agroal-pool:2.1")
+  implementation("org.jooq:jooq:3.18.4")
+  implementation("org.flywaydb:flyway-core:9.19.1")
+  runtimeOnly("org.postgresql:postgresql:42.6.0")
+
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  testImplementation("org.testcontainers:junit-jupiter:1.18.1")
+  testImplementation("org.testcontainers:postgresql:1.18.1")
+  testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
+
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = "11"
+tasks.withType<JavaCompile>().configureEach {
+  sourceCompatibility = "${JavaVersion.VERSION_17}"
+  targetCompatibility = "${JavaVersion.VERSION_17}"
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+  kotlinOptions {
+    jvmTarget = "${JavaVersion.VERSION_17}"
+    allWarningsAsErrors = true
+    freeCompilerArgs = listOf("-Xcontext-receivers")
+  }
+}
 
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
