@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
-import org.koin.dsl.module
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -38,15 +37,13 @@ abstract class IntegrationTest(private val vertx: Vertx) {
 
   @BeforeEach
   protected open fun setup() {
-    appConfigModule = module {
-      single {
-        AppConfig(
-          8080,
-          pgContainer.jdbcUrl,
-          pgContainer.username,
-          pgContainer.password,
-        )
-      }
+    appConfigModule.single {
+      AppConfig(
+        8080,
+        pgContainer.jdbcUrl,
+        pgContainer.username,
+        pgContainer.password,
+      )
     }
 
     deploymentId = runBlocking {

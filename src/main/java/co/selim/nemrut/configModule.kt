@@ -18,7 +18,7 @@ data class AppConfig(
   val dbPassword: String,
 )
 
-var appConfigModule = module {
+val appConfigModule = module {
   single<AppConfig> {
     val vertx = get<Vertx>()
     runBlocking(vertx.dispatcher()) {
