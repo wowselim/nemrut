@@ -1,6 +1,7 @@
 package co.selim.nemrut
 
 import co.selim.nemrut.db.dbModule
+import co.selim.nemrut.ext.Environment
 import co.selim.nemrut.web.WebVerticle
 import co.selim.nemrut.web.company.companyModule
 import co.selim.nemrut.web.salary.salaryModule
@@ -21,9 +22,14 @@ import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import org.slf4j.LoggerFactory
 import com.fasterxml.jackson.databind.Module as JacksonDatabindModule
 
 class MainVerticle : CoroutineVerticle(), KoinComponent {
+
+  companion object {
+    private val LOG = LoggerFactory.getLogger(MainVerticle::class.java)
+  }
 
   private val flyway by inject<Flyway>()
 
@@ -49,8 +55,12 @@ class MainVerticle : CoroutineVerticle(), KoinComponent {
       )
     }
 
+    val environment = Environment.current()
+
+    LOG.info("Started application in [$environment] mode")
+
     awaitBlocking {
-      if (System.getenv("NEMRUT_ENVIRONMENT") == "dev") {
+      if (environment == Environment.DEV) {
         flyway.clean()
       }
       flyway.migrate()
@@ -73,6 +83,7 @@ class MainVerticle : CoroutineVerticle(), KoinComponent {
 }
 
 suspend fun main() {
+  Environment.set(Environment.DEV)
   val vertx = Vertx.vertx()
   vertx.deployVerticle(MainVerticle::class.java.name).await()
 }

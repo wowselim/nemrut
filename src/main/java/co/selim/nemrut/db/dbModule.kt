@@ -1,6 +1,7 @@
 package co.selim.nemrut.db
 
 import co.selim.nemrut.AppConfig
+import co.selim.nemrut.ext.Environment
 import co.selim.nemrut.ext.awaitBlockingSuspend
 import io.agroal.api.AgroalDataSource
 import io.agroal.api.configuration.AgroalDataSourceConfiguration
@@ -48,7 +49,7 @@ val dbModule = module {
 
     Flyway(
       FluentConfiguration()
-        .cleanDisabled(System.getenv("NEMRUT_ENVIRONMENT") != "dev")
+        .cleanDisabled(Environment.current() == Environment.PROD)
         .baselineOnMigrate(true)
         .dataSource(dataSource)
     )
