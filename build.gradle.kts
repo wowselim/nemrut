@@ -16,9 +16,9 @@ buildscript {
   }
   dependencies {
     classpath("org.jooq:jooq-codegen:3.17.4")
-    classpath("org.postgresql:postgresql:42.5.0")
-    classpath("org.testcontainers:postgresql:1.17.3")
-    classpath("org.flywaydb:flyway-core:9.3.0")
+    classpath("org.postgresql:postgresql:42.6.0")
+    classpath("org.testcontainers:postgresql:1.18.3")
+    classpath("org.flywaydb:flyway-core:9.19.3")
   }
 }
 
@@ -111,13 +111,13 @@ dependencies {
 
   implementation("io.agroal:agroal-pool:2.1")
   implementation("org.jooq:jooq:3.18.4")
-  implementation("org.flywaydb:flyway-core:9.19.1")
+  implementation("org.flywaydb:flyway-core:9.19.3")
   runtimeOnly("org.postgresql:postgresql:42.6.0")
 
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
-  testImplementation("org.testcontainers:junit-jupiter:1.18.1")
-  testImplementation("org.testcontainers:postgresql:1.18.1")
+  testImplementation("org.testcontainers:junit-jupiter:1.18.3")
+  testImplementation("org.testcontainers:postgresql:1.18.3")
   testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
 
 }
