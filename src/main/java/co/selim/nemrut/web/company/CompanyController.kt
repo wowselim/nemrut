@@ -8,6 +8,7 @@ import co.selim.nemrut.web.Controller
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import org.jooq.impl.DSL
 import java.net.URI
 
 class CompanyController(
@@ -24,6 +25,7 @@ class CompanyController(
     handleGet(router)
     handlePost(router)
     handlePut(router)
+    handleGetSalaries(router)
   }
 
   data class UpsertCompanyDto(val name: String)
@@ -86,6 +88,27 @@ class CompanyController(
             .fetchOneInto(Company::class.java)
         }
         ctx.response().jsonOrNotFound(company)
+      }
+  }
+
+  data class RoleSalary(val title: String, val amount: Long, val currency: String)
+
+  private fun handleGetSalaries(router: Router) {
+    router.get("${BASE_URI}/:id/salaries")
+      .coroutineHandler { ctx ->
+        val id = ctx.requireId("id")
+
+        val salaries = database.withDsl { dsl ->
+          dsl.select(Tables.ROLE.TITLE, DSL.avg(Tables.SALARY.AMOUNT).`as`("amount"), Tables.SALARY.CURRENCY)
+            .from(Tables.SALARY)
+            .join(Tables.ROLE)
+            .on(Tables.SALARY.ROLE_ID.eq(Tables.ROLE.ID))
+            .where(Tables.SALARY.COMPANY_ID.eq(id))
+            .groupBy(Tables.ROLE.TITLE, Tables.SALARY.CURRENCY)
+            .fetchInto(RoleSalary::class.java)
+        }
+
+        ctx.response().json(salaries)
       }
   }
 }

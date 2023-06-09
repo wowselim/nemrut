@@ -1,15 +1,10 @@
 package co.selim.nemrut
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import io.restassured.RestAssured
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.await
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -22,18 +17,6 @@ abstract class IntegrationTest(private val vertx: Vertx) {
   protected val pgContainer = PostgreSQLContainer<Nothing>("postgres:14.3")
 
   private var deploymentId: String? = null
-
-  companion object {
-    @JvmStatic
-    @BeforeAll
-    fun prepare() {
-      RestAssured.config = RestAssured.config.apply {
-        jacksonObjectMapper().apply {
-          registerKotlinModule().registerModules(JavaTimeModule())
-        }
-      }
-    }
-  }
 
   @BeforeEach
   protected open fun setup() {
