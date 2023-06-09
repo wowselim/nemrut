@@ -27,7 +27,7 @@ val dbModule = module {
       .metricsEnabled(false)
       .connectionPoolConfiguration { cp ->
         cp.validationTimeout(Duration.ofMillis(30_000L))
-          .minSize(0)
+          .minSize(2)
           .maxSize(32)
           .initialSize(4)
           .acquisitionTimeout(Duration.ofMillis(0))
@@ -57,14 +57,15 @@ val dbModule = module {
 
   single<Database> {
     val dataSource = get<DataSource>()
-    fun jooqConfig() = DefaultConfiguration().apply {
+    val config = DefaultConfiguration().apply {
       setDataSource(dataSource)
       setSQLDialect(SQLDialect.POSTGRES)
     }
+    val dslContext = DSL.using(config)
 
     object : Database {
       override suspend fun <T> withDsl(block: suspend (DSLContext) -> T): T {
-        return awaitBlockingSuspend { block(DSL.using(jooqConfig())) }
+        return awaitBlockingSuspend { block(dslContext) }
       }
     }
   }
