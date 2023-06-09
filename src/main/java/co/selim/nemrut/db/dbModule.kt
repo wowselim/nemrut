@@ -2,12 +2,12 @@ package co.selim.nemrut.db
 
 import co.selim.nemrut.AppConfig
 import co.selim.nemrut.ext.Environment
-import co.selim.nemrut.ext.awaitBlockingSuspend
 import io.agroal.api.AgroalDataSource
 import io.agroal.api.configuration.AgroalDataSourceConfiguration
 import io.agroal.api.configuration.supplier.AgroalDataSourceConfigurationSupplier
 import io.agroal.api.security.NamePrincipal
 import io.agroal.api.security.SimplePassword
+import io.vertx.kotlin.coroutines.awaitBlocking
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 import org.jooq.DSLContext
@@ -64,8 +64,8 @@ val dbModule = module {
     val dslContext = DSL.using(config)
 
     object : Database {
-      override suspend fun <T> withDsl(block: suspend (DSLContext) -> T): T {
-        return awaitBlockingSuspend { block(dslContext) }
+      override suspend fun <T> withDsl(block: (DSLContext) -> T): T {
+        return awaitBlocking { block(dslContext) }
       }
     }
   }
