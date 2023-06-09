@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val salaryModule = module {
   single {
-    SalaryController(get(), get())
+    RoleController(get(), get())
   } bind Controller::class
 }
