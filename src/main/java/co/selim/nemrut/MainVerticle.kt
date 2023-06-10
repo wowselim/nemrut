@@ -77,7 +77,6 @@ class MainVerticle : CoroutineVerticle(), KoinComponent {
 
   private fun ObjectMapper.configure(vararg modules: JacksonDatabindModule) {
     registerModules(*modules)
-    //propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
     disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
   }
