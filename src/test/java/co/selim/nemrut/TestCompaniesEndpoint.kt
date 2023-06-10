@@ -8,6 +8,7 @@ import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxExtension
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
@@ -34,8 +35,7 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
       post(BASE_URI)
     } Then {
       statusCode(201)
-        .and()
-        .contentType(JSON)
+      contentType(JSON)
     }
   }
 
@@ -47,8 +47,7 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
       post(BASE_URI)
     } Then {
       statusCode(201)
-        .and()
-        .contentType(JSON)
+      contentType(JSON)
     }
 
     val company = response.extract().body().`as`(Company::class.java)
@@ -58,8 +57,8 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
       put("$BASE_URI/${company.id}")
     } Then {
       statusCode(200)
-        .and()
-        .contentType(JSON)
+      contentType(JSON)
+      body("id", equalTo(company.id.toString()))
     }
   }
 
@@ -82,8 +81,7 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
       post(BASE_URI)
     } Then {
       statusCode(201)
-        .and()
-        .contentType(JSON)
+      contentType(JSON)
     }
 
     val company = response.extract().body().`as`(Company::class.java)
@@ -91,8 +89,8 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
       get("$BASE_URI/${company.id}")
     } Then {
       statusCode(200)
-        .and()
-        .contentType(JSON)
+      contentType(JSON)
+      body("id", equalTo(company.id.toString()))
     }
   }
 }
