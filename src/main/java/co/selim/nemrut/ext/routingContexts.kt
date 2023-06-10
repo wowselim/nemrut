@@ -1,6 +1,5 @@
 package co.selim.nemrut.ext
 
-import co.selim.nemrut.ext.ContentType.JSON
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.Json
@@ -22,7 +21,7 @@ suspend fun HttpServerResponse.notFound() {
 }
 
 suspend fun HttpServerResponse.json(body: Any) {
-  putHeader(HttpHeaders.CONTENT_TYPE, JSON.value)
+  putHeader(HttpHeaders.CONTENT_TYPE, ContentTypes.JSON)
     .end(Json.encode(body))
     .await()
 }
