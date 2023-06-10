@@ -5,6 +5,10 @@ enum class Environment(private val stringValue: String) {
 
   DEV("dev"), PROD("prod");
 
+  override fun toString(): String {
+    return stringValue
+  }
+
   companion object {
 
     private const val ENVIRONMENT_KEY = "NEMRUT_ENVIRONMENT"
