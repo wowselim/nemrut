@@ -1,7 +1,6 @@
 package co.selim.nemrut.web.role
 
 import co.selim.nemrut.db.Database
-import co.selim.nemrut.ext.coroutineHandler
 import co.selim.nemrut.ext.json
 import co.selim.nemrut.jooq.Tables.ROLE
 import co.selim.nemrut.jooq.tables.pojos.Role
