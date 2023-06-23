@@ -17,13 +17,20 @@ enum class Environment(private val stringValue: String) {
       System.setProperty(ENVIRONMENT_KEY, environment.stringValue)
     }
 
-    private fun fromString(stringValue: String?): Environment? {
-      return values().firstOrNull { it.stringValue == stringValue }
+    private fun fromString(stringValue: String?): Environment {
+      val match = values().firstOrNull { it.stringValue == stringValue }
+      return requireNotNull(match) {
+        val possibleValues = values().joinToString { env -> "'$env'" }
+        "Unknown environment '$stringValue'. Must be one of [$possibleValues]."
+      }
     }
 
     fun current(): Environment {
-      val value: String? = System.getProperty(ENVIRONMENT_KEY) ?: System.getenv(ENVIRONMENT_KEY)
-      return fromString(value) ?: PROD
+      val value: String = System.getProperty(ENVIRONMENT_KEY)
+        ?: System.getenv(ENVIRONMENT_KEY)
+        ?: return PROD
+
+      return fromString(value)
     }
   }
 }
