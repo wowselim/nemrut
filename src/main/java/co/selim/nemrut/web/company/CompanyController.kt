@@ -62,7 +62,7 @@ class CompanyController(
       .coroutineHandler { ctx ->
         val request = ctx.requireBody<UpsertCompanyDto>()
 
-        val company = database.withDsl { dsl ->
+        val company = database.withTransaction { dsl ->
           dsl.insertInto(Tables.COMPANY)
             .set(dsl.newRecord(Tables.COMPANY, request))
             .returning()
@@ -80,7 +80,7 @@ class CompanyController(
         val id = ctx.requireId("id")
         val request = ctx.requireBody<UpsertCompanyDto>()
 
-        val company = database.withDsl { dsl ->
+        val company = database.withTransaction { dsl ->
           dsl.update(Tables.COMPANY)
             .set(dsl.newRecord(Tables.COMPANY, request))
             .where(Tables.COMPANY.ID.eq(id))
