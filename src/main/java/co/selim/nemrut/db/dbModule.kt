@@ -67,6 +67,14 @@ val dbModule = module {
       override suspend fun <T> withDsl(block: (DSLContext) -> T): T {
         return awaitBlocking { block(dslContext) }
       }
+
+      override suspend fun <T> withTransaction(block: (DSLContext) -> T): T {
+        return awaitBlocking {
+          dslContext.transactionResult { config ->
+            block(config.dsl())
+          }
+        }
+      }
     }
   }
 }
