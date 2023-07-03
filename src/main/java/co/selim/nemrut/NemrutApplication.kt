@@ -80,7 +80,7 @@ object NemrutApplication {
     System.setProperty("org.jooq.no-logo", "true")
 
     val appComponent = DaggerAppComponent.builder()
-      .applicationModule(ApplicationModule(vertx, appConfig ?: readAppConfig(vertx)))
+      .applicationModule(ApplicationModule(vertx, appConfig ?: readAppConfig()))
       .build()
 
     val environment = Environment.current()
@@ -117,7 +117,7 @@ object NemrutApplication {
     disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
   }
 
-  private fun readAppConfig(vertx: Vertx): AppConfig {
+  private fun readAppConfig(): AppConfig {
     return runBlocking(vertx.dispatcher()) {
       vertx.fileSystem()
         .readFile("config.json")
