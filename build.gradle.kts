@@ -81,17 +81,11 @@ repositories {
   mavenCentral()
 }
 
-val vertxVersion = "4.4.2"
+val vertxVersion = "4.4.4"
 val junitJupiterVersion = "5.9.3"
 
-val mainVerticleName = "co.selim.nemrut.MainVerticle"
-val launcherClassName = "io.vertx.core.Launcher"
-
-val watchForChange = "src/**/*"
-val doOnChange = "${projectDir}/gradlew classes"
-
 application {
-  mainClass.set(launcherClassName)
+  mainClass.set("co.selim.nemrut.NemrutApplication")
 }
 
 dependencies {
@@ -137,9 +131,6 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
-  manifest {
-    attributes(mapOf("Main-Verticle" to mainVerticleName))
-  }
   mergeServiceFiles()
 }
 
@@ -148,14 +139,4 @@ tasks.withType<Test> {
   testLogging {
     events = setOf(PASSED, SKIPPED, FAILED)
   }
-}
-
-tasks.withType<JavaExec> {
-  args = listOf(
-    "run",
-    mainVerticleName,
-    "--redeploy=$watchForChange",
-    "--launcher-class=$launcherClassName",
-    "--on-redeploy=$doOnChange"
-  )
 }

@@ -1,18 +1,15 @@
 package co.selim.nemrut.web
 
 import co.selim.nemrut.AppConfig
-import co.selim.nemrut.ext.injectAll
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.slf4j.LoggerFactory
 
-class WebVerticle : CoroutineVerticle(), KoinComponent {
-
-  private val appConfig by inject<AppConfig>()
-  private val controllers by injectAll<Controller>()
+class WebVerticle(
+  private val appConfig: AppConfig,
+  private val controllers: List<Controller>,
+) : CoroutineVerticle() {
 
   companion object {
     private val LOG = LoggerFactory.getLogger(WebVerticle::class.java)
