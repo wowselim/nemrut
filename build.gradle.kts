@@ -69,7 +69,8 @@ task("jooqGenerate") {
 }
 
 plugins {
-  kotlin("jvm") version "1.8.21"
+  kotlin("jvm") version "1.8.22"
+  kotlin("kapt") version "1.8.22"
   application
   id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -95,13 +96,15 @@ dependencies {
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
 
-  compileOnly("org.slf4j:slf4j-api:2.0.7")
+  implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
   runtimeOnly("org.slf4j:slf4j-simple:2.0.7")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
-  implementation("io.insert-koin:koin-core-jvm:3.4.0")
+  val daggerVersion = "2.46.1"
+  implementation("com.google.dagger:dagger:$daggerVersion")
+  kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
   implementation("io.agroal:agroal-pool:2.1")
   implementation("org.jooq:jooq:3.18.4")

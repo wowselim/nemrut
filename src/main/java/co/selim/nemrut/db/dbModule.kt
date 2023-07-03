@@ -2,6 +2,8 @@ package co.selim.nemrut.db
 
 import co.selim.nemrut.AppConfig
 import co.selim.nemrut.ext.Environment
+import dagger.Module
+import dagger.Provides
 import io.agroal.api.AgroalDataSource
 import io.agroal.api.configuration.AgroalDataSourceConfiguration
 import io.agroal.api.configuration.supplier.AgroalDataSourceConfigurationSupplier
@@ -14,14 +16,15 @@ import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConfiguration
-import org.koin.dsl.module
 import java.time.Duration
+import javax.inject.Singleton
 import javax.sql.DataSource
 
-val dbModule = module {
-  single<DataSource> {
-    val config = get<AppConfig>()
-
+@Module
+class DatabaseModule {
+  @Provides
+  @Singleton
+  fun dataSource(config: AppConfig): DataSource {
     val dataSourceConfig = AgroalDataSourceConfigurationSupplier()
       .dataSourceImplementation(AgroalDataSourceConfiguration.DataSourceImplementation.AGROAL)
       .metricsEnabled(false)
@@ -41,13 +44,13 @@ val dbModule = module {
       }
       .get()
 
-    AgroalDataSource.from(dataSourceConfig)
+    return AgroalDataSource.from(dataSourceConfig)
   }
 
-  single {
-    val dataSource = get<DataSource>()
-
-    Flyway(
+  @Provides
+  @Singleton
+  fun flyway(dataSource: DataSource): Flyway {
+    return Flyway(
       FluentConfiguration()
         .cleanDisabled(Environment.current() == Environment.PROD)
         .baselineOnMigrate(true)
@@ -55,15 +58,16 @@ val dbModule = module {
     )
   }
 
-  single<Database> {
-    val dataSource = get<DataSource>()
+  @Provides
+  @Singleton
+  fun database(dataSource: DataSource): Database {
     val config = DefaultConfiguration().apply {
       setDataSource(dataSource)
       setSQLDialect(SQLDialect.POSTGRES)
     }
     val dslContext = DSL.using(config)
 
-    object : Database {
+    return object : Database {
       override suspend fun <T> withDsl(block: (DSLContext) -> T): T {
         return awaitBlocking { block(dslContext) }
       }

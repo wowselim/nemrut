@@ -10,24 +10,24 @@ import org.testcontainers.junit.jupiter.Testcontainers
 abstract class IntegrationTest {
 
   @Container
-  protected val pgContainer = PostgreSQLContainer<Nothing>("postgres:14.3")
+  protected val pgContainer = PostgreSQLContainer("postgres:14.3")
 
   @BeforeEach
-  protected open fun setup() {
-    appConfigModule.single {
+  protected fun setup() {
+    val appConfig = with(pgContainer) {
       AppConfig(
         8080,
-        pgContainer.jdbcUrl,
-        pgContainer.username,
-        pgContainer.password,
+        jdbcUrl,
+        username,
+        password,
       )
     }
 
-    NemrutApplication.start()
+    NemrutApplication.start(appConfig)
   }
 
   @AfterEach
-  protected open fun cleanup() {
+  protected fun cleanup() {
     NemrutApplication.stop()
   }
 }

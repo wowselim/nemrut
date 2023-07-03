@@ -1,18 +1,18 @@
 package co.selim.nemrut.web
 
 import co.selim.nemrut.AppConfig
+import com.github.michaelbull.logging.InlineLogger
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
-import org.slf4j.LoggerFactory
 
 class WebVerticle(
   private val appConfig: AppConfig,
-  private val controllers: List<Controller>,
+  private val controllers: Set<Controller>,
 ) : CoroutineVerticle() {
 
   companion object {
-    private val LOG = LoggerFactory.getLogger(WebVerticle::class.java)
+    private val LOG = InlineLogger()
   }
 
   override suspend fun start() {
@@ -22,7 +22,7 @@ class WebVerticle(
       .failureHandler { ctx ->
         if (ctx.response().ended()) return@failureHandler
 
-        LOG.error("Uncaught exception in router", ctx.failure())
+        LOG.error(ctx.failure()) { "Uncaught exception in router" }
         ctx.response()
           .setStatusCode(500)
           .end()
