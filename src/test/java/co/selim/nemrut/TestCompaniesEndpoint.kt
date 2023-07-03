@@ -6,15 +6,11 @@ import io.restassured.http.ContentType.JSON
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
-import io.vertx.core.Vertx
-import io.vertx.junit5.VertxExtension
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 
-@ExtendWith(VertxExtension::class)
-class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
+class TestCompaniesEndpoint : IntegrationTest() {
 
   @Test
   fun `get returns 200 status code`() {
@@ -28,7 +24,7 @@ class TestCompaniesEndpoint(vertx: Vertx) : IntegrationTest(vertx) {
   private val requestBody = mapOf("name" to "Evil Corp.")
 
   @Test
-  fun `creating a new note returns 201`() {
+  fun `creating a new company returns 201`() {
     Given {
       body(requestBody)
     } When {

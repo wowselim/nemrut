@@ -1,9 +1,5 @@
 package co.selim.nemrut
 
-import io.vertx.core.DeploymentOptions
-import io.vertx.core.Vertx
-import io.vertx.kotlin.coroutines.await
-import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.testcontainers.containers.PostgreSQLContainer
@@ -11,12 +7,10 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-abstract class IntegrationTest(private val vertx: Vertx) {
+abstract class IntegrationTest {
 
   @Container
   protected val pgContainer = PostgreSQLContainer<Nothing>("postgres:14.3")
-
-  private var deploymentId: String? = null
 
   @BeforeEach
   protected open fun setup() {
@@ -29,13 +23,11 @@ abstract class IntegrationTest(private val vertx: Vertx) {
       )
     }
 
-    deploymentId = runBlocking {
-      vertx.deployVerticle(MainVerticle::class.java, DeploymentOptions()).await()
-    }
+    NemrutApplication.start()
   }
 
   @AfterEach
   protected open fun cleanup() {
-    deploymentId?.let(vertx::undeploy)
+    NemrutApplication.stop()
   }
 }
