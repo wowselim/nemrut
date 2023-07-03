@@ -15,10 +15,10 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jooq:jooq-codegen:3.17.4")
+    classpath("org.jooq:jooq-codegen:3.18.5")
     classpath("org.postgresql:postgresql:42.6.0")
     classpath("org.testcontainers:postgresql:1.18.3")
-    classpath("org.flywaydb:flyway-core:9.19.3")
+    classpath("org.flywaydb:flyway-core:9.20.0")
   }
 }
 
@@ -106,17 +106,16 @@ dependencies {
   implementation("com.google.dagger:dagger:$daggerVersion")
   kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
-  implementation("io.agroal:agroal-pool:2.1")
-  implementation("org.jooq:jooq:3.18.4")
-  implementation("org.flywaydb:flyway-core:9.19.3")
+  implementation("io.agroal:agroal-pool:2.2")
+  implementation("org.jooq:jooq:3.18.5")
+  implementation("org.flywaydb:flyway-core:9.20.0")
   runtimeOnly("org.postgresql:postgresql:42.6.0")
 
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
   testImplementation("org.testcontainers:junit-jupiter:1.18.3")
   testImplementation("org.testcontainers:postgresql:1.18.3")
-  testImplementation("io.rest-assured:kotlin-extensions:5.3.0")
-
+  testImplementation("io.rest-assured:kotlin-extensions:5.3.1")
 }
 
 tasks.withType<JavaCompile>().configureEach {
