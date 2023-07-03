@@ -1,5 +1,6 @@
 package co.selim.nemrut
 
+import io.restassured.RestAssured
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.testcontainers.containers.PostgreSQLContainer
@@ -14,15 +15,18 @@ abstract class IntegrationTest {
 
   @BeforeEach
   protected fun setup() {
+    val port = 8087
+
     val appConfig = with(pgContainer) {
       AppConfig(
-        8080,
+        port,
         jdbcUrl,
         username,
         password,
       )
     }
 
+    RestAssured.port = port
     NemrutApplication.start(appConfig)
   }
 
