@@ -82,16 +82,13 @@ repositories {
   mavenCentral()
 }
 
-val vertxVersion = "4.4.4"
-val junitJupiterVersion = "5.9.3"
-
 application {
   mainClass.set("co.selim.nemrut.NemrutApplication")
 }
 
 dependencies {
   implementation(kotlin("stdlib-jdk8"))
-  implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
+  implementation(platform("io.vertx:vertx-stack-depchain:4.4.4"))
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
@@ -111,8 +108,7 @@ dependencies {
   implementation("org.flywaydb:flyway-core:9.20.0")
   runtimeOnly("org.postgresql:postgresql:42.6.0")
 
-  testImplementation("io.vertx:vertx-junit5")
-  testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
   testImplementation("org.testcontainers:junit-jupiter:1.18.3")
   testImplementation("org.testcontainers:postgresql:1.18.3")
   testImplementation("io.rest-assured:kotlin-extensions:5.3.1")
