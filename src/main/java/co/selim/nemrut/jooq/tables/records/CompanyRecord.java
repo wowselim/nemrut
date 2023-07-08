@@ -217,6 +217,7 @@ public class CompanyRecord extends UpdatableRecordImpl<CompanyRecord> implements
         setName(name);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
+        resetChangedOnNotNull();
     }
 
     /**
@@ -230,6 +231,7 @@ public class CompanyRecord extends UpdatableRecordImpl<CompanyRecord> implements
             setName(value.name());
             setCreatedAt(value.createdAt());
             setUpdatedAt(value.updatedAt());
+            resetChangedOnNotNull();
         }
     }
 }

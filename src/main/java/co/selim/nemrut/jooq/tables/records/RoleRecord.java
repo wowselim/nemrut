@@ -217,6 +217,7 @@ public class RoleRecord extends UpdatableRecordImpl<RoleRecord> implements Recor
         setTitle(title);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
+        resetChangedOnNotNull();
     }
 
     /**
@@ -230,6 +231,7 @@ public class RoleRecord extends UpdatableRecordImpl<RoleRecord> implements Recor
             setTitle(value.title());
             setCreatedAt(value.createdAt());
             setUpdatedAt(value.updatedAt());
+            resetChangedOnNotNull();
         }
     }
 }

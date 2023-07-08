@@ -328,6 +328,7 @@ public class SalaryRecord extends UpdatableRecordImpl<SalaryRecord> implements R
         setAmount(amount);
         setCreatedAt(createdAt);
         setUpdatedAt(updatedAt);
+        resetChangedOnNotNull();
     }
 
     /**
@@ -344,6 +345,7 @@ public class SalaryRecord extends UpdatableRecordImpl<SalaryRecord> implements R
             setAmount(value.amount());
             setCreatedAt(value.createdAt());
             setUpdatedAt(value.updatedAt());
+            resetChangedOnNotNull();
         }
     }
 }
