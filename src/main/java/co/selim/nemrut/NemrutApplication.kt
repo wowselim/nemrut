@@ -79,8 +79,12 @@ object NemrutApplication {
 
     System.setProperty("org.jooq.no-logo", "true")
 
+    val appModule = ApplicationModule(
+      vertx,
+      appConfig ?: runBlocking(vertx.dispatcher()) { AppConfig.load(vertx) }
+    )
     val appComponent = DaggerAppComponent.builder()
-      .applicationModule(ApplicationModule(vertx, appConfig ?: readAppConfig()))
+      .applicationModule(appModule)
       .build()
 
     val environment = Environment.current()
@@ -115,14 +119,5 @@ object NemrutApplication {
     registerModules(*modules)
     disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-  }
-
-  private fun readAppConfig(): AppConfig {
-    return runBlocking(vertx.dispatcher()) {
-      val buffer = vertx.fileSystem()
-        .readFile("config.json")
-        .await()
-      AppConfig.fromBuffer(buffer)
-    }
   }
 }

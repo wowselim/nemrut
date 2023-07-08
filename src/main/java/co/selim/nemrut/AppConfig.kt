@@ -1,8 +1,8 @@
 package co.selim.nemrut
 
-import io.vertx.core.buffer.Buffer
-import io.vertx.core.json.JsonObject
+import io.vertx.core.Vertx
 import io.vertx.kotlin.core.json.get
+import io.vertx.kotlin.coroutines.await
 
 data class AppConfig(
   val httpPort: Int,
@@ -13,13 +13,30 @@ data class AppConfig(
 
   companion object {
 
-    fun fromBuffer(buffer: Buffer): AppConfig {
-      val jsonObject = JsonObject(buffer)
+    private const val CONFIG_FILENAME = "config.json"
+    private const val CONFIG_FS_PATH = "/etc/nemrut/$CONFIG_FILENAME"
+
+    suspend fun load(vertx: Vertx): AppConfig {
+      val fsConfigExists = vertx.fileSystem()
+        .exists(CONFIG_FS_PATH)
+        .await()
+
+      val configPath = if (fsConfigExists) {
+        CONFIG_FS_PATH
+      } else {
+        CONFIG_FILENAME
+      }
+
+      val jsonConfig = vertx.fileSystem()
+        .readFile(configPath)
+        .await()
+        .toJsonObject()
+
       return AppConfig(
-        jsonObject["http.port"],
-        jsonObject["db.url"],
-        jsonObject["db.username"],
-        jsonObject["db.password"],
+        jsonConfig["http.port"],
+        jsonConfig["db.url"],
+        jsonConfig["db.username"],
+        jsonConfig["db.password"],
       )
     }
   }
