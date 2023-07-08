@@ -119,11 +119,10 @@ object NemrutApplication {
 
   private fun readAppConfig(): AppConfig {
     return runBlocking(vertx.dispatcher()) {
-      vertx.fileSystem()
+      val buffer = vertx.fileSystem()
         .readFile("config.json")
         .await()
+      AppConfig.fromBuffer(buffer)
     }
-      .toJsonObject()
-      .mapTo(AppConfig::class.java)
   }
 }

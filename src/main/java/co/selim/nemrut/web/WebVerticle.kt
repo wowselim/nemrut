@@ -32,9 +32,11 @@ class WebVerticle(
       controller.register(router)
     }
 
-    vertx.createHttpServer()
+    val server = vertx.createHttpServer()
       .requestHandler(router)
       .listen(appConfig.httpPort)
       .await()
+
+    LOG.info { "Listening on port ${server.actualPort()}" }
   }
 }

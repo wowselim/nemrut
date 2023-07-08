@@ -1,14 +1,26 @@
 package co.selim.nemrut
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import io.vertx.core.buffer.Buffer
+import io.vertx.core.json.JsonObject
+import io.vertx.kotlin.core.json.get
 
 data class AppConfig(
-  @JsonProperty("http.port")
   val httpPort: Int,
-  @JsonProperty("db.url")
   val dbUrl: String,
-  @JsonProperty("db.username")
   val dbUsername: String,
-  @JsonProperty("db.password")
   val dbPassword: String,
-)
+) {
+
+  companion object {
+
+    fun fromBuffer(buffer: Buffer): AppConfig {
+      val jsonObject = JsonObject(buffer)
+      return AppConfig(
+        jsonObject["http.port"],
+        jsonObject["db.url"],
+        jsonObject["db.username"],
+        jsonObject["db.password"],
+      )
+    }
+  }
+}
