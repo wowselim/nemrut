@@ -11,7 +11,6 @@ import org.testcontainers.containers.PostgreSQLContainer
 
 buildscript {
   repositories {
-    mavenLocal()
     mavenCentral()
   }
   dependencies {
@@ -137,4 +136,8 @@ tasks.withType<Test> {
   testLogging {
     events = setOf(PASSED, SKIPPED, FAILED)
   }
+}
+
+task("buildReleaseJar") {
+  dependsOn("jooqGenerate", "shadowJar")
 }
