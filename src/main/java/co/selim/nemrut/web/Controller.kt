@@ -10,9 +10,11 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-abstract class Controller(vertx: Vertx) : CoroutineScope {
+abstract class Controller : CoroutineScope {
 
-  override val coroutineContext: CoroutineContext by lazy { vertx.dispatcher() + SupervisorJob() }
+  override val coroutineContext: CoroutineContext by lazy {
+    Vertx.currentContext().dispatcher() + SupervisorJob()
+  }
 
   abstract fun register(router: Router)
 

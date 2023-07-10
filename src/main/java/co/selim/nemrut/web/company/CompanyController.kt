@@ -5,16 +5,12 @@ import co.selim.nemrut.ext.*
 import co.selim.nemrut.jooq.Tables
 import co.selim.nemrut.jooq.tables.pojos.Company
 import co.selim.nemrut.web.Controller
-import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import org.jooq.impl.DSL
 import java.net.URI
 
-class CompanyController(
-  vertx: Vertx,
-  private val database: Database
-) : Controller(vertx) {
+class CompanyController(private val database: Database) : Controller() {
 
   companion object {
     const val BASE_URI = "/companies"

@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
 import io.vertx.core.Verticle
-import io.vertx.core.Vertx
 import java.util.function.Supplier
 import javax.inject.Singleton
 
@@ -18,18 +17,19 @@ class WebModule {
   @Provides
   @Singleton
   @IntoSet
-  fun companyController(vertx: Vertx, database: Database): Controller {
-    return CompanyController(vertx, database)
+  fun companyController(database: Database): Controller {
+    return CompanyController(database)
   }
 
   @Provides
   @Singleton
   @IntoSet
-  fun roleController(vertx: Vertx, database: Database): Controller {
-    return RoleController(vertx, database)
+  fun roleController(database: Database): Controller {
+    return RoleController(database)
   }
 
   @Provides
+  @Singleton
   @IntoSet
   fun webVerticle(
     appConfig: AppConfig,
