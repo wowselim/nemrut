@@ -17,7 +17,7 @@ buildscript {
     classpath("org.jooq:jooq-codegen:3.18.7")
     classpath("org.postgresql:postgresql:42.7.0")
     classpath("org.testcontainers:postgresql:1.19.3")
-    classpath("org.flywaydb:flyway-core:9.22.3")
+    classpath("org.flywaydb:flyway-database-postgresql:10.1.0")
   }
 }
 
@@ -100,7 +100,7 @@ dependencies {
 
   implementation("io.agroal:agroal-pool:2.2")
   implementation("org.jooq:jooq:3.18.7")
-  implementation("org.flywaydb:flyway-core:9.22.3")
+  implementation("org.flywaydb:flyway-database-postgresql:10.1.0")
   runtimeOnly("org.postgresql:postgresql:42.7.0")
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
