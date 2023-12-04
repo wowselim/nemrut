@@ -6,7 +6,8 @@ import co.selim.nemrut.db.flyway
 import co.selim.nemrut.environment.Environment
 import co.selim.nemrut.web.WebVerticle
 import co.selim.nemrut.web.auth.AuthnProvider
-import co.selim.nemrut.web.auth.LoginController
+import co.selim.nemrut.web.auth.SigninHandler
+import co.selim.nemrut.web.auth.SignupHandler
 import co.selim.nemrut.web.company.CompanyController
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -70,7 +71,8 @@ object NemrutApplication {
           val authnProvider = AuthnProvider(database)
           //val authzProvider = AuthzProvider(database)
           val controllers = setOf(
-            LoginController(authnProvider),
+            SignupHandler(database),
+            SigninHandler(authnProvider),
             CompanyController(database),
           )
           WebVerticle(config, controllers)

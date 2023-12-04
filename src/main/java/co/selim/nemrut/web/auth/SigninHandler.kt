@@ -7,10 +7,10 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.coroutines.coAwait
 
-class LoginController(private val authnProvider: AuthnProvider) : Controller() {
+class SigninHandler(private val authnProvider: AuthnProvider) : Controller() {
 
   companion object {
-    const val BASE_URI = "/login"
+    const val BASE_URI = "/signin"
   }
 
   override fun register(router: Router) {

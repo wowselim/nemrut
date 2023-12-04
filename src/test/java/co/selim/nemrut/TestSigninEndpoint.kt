@@ -1,12 +1,12 @@
 package co.selim.nemrut
 
-import co.selim.nemrut.web.auth.LoginController.Companion.BASE_URI
+import co.selim.nemrut.web.auth.SigninHandler.Companion.BASE_URI
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.junit.jupiter.api.Test
 
-class TestLoginEndpoint : IntegrationTest() {
+class TestSigninEndpoint : IntegrationTest() {
 
   private fun credentialsOf(username: String, password: String): Map<String, String> {
     return mapOf("username" to username, "password" to password)
