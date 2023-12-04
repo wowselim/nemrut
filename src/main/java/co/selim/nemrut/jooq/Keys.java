@@ -7,11 +7,17 @@ package co.selim.nemrut.jooq;
 import co.selim.nemrut.jooq.tables.Company;
 import co.selim.nemrut.jooq.tables.FlywaySchemaHistory;
 import co.selim.nemrut.jooq.tables.Role;
+import co.selim.nemrut.jooq.tables.RolePermission;
 import co.selim.nemrut.jooq.tables.Salary;
+import co.selim.nemrut.jooq.tables.UserAccount;
+import co.selim.nemrut.jooq.tables.UserRole;
 import co.selim.nemrut.jooq.tables.records.CompanyRecord;
 import co.selim.nemrut.jooq.tables.records.FlywaySchemaHistoryRecord;
+import co.selim.nemrut.jooq.tables.records.RolePermissionRecord;
 import co.selim.nemrut.jooq.tables.records.RoleRecord;
 import co.selim.nemrut.jooq.tables.records.SalaryRecord;
+import co.selim.nemrut.jooq.tables.records.UserAccountRecord;
+import co.selim.nemrut.jooq.tables.records.UserRoleRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -34,7 +40,11 @@ public class Keys {
     public static final UniqueKey<CompanyRecord> COMPANY_PKEY = Internal.createUniqueKey(Company.COMPANY, DSL.name("company_pkey"), new TableField[] { Company.COMPANY.ID }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<RoleRecord> ROLE_PKEY = Internal.createUniqueKey(Role.ROLE, DSL.name("role_pkey"), new TableField[] { Role.ROLE.ID }, true);
+    public static final UniqueKey<RolePermissionRecord> ROLE_PERMISSION_PKEY = Internal.createUniqueKey(RolePermission.ROLE_PERMISSION, DSL.name("role_permission_pkey"), new TableField[] { RolePermission.ROLE_PERMISSION.ROLE, RolePermission.ROLE_PERMISSION.PERMISSION }, true);
     public static final UniqueKey<SalaryRecord> SALARY_PKEY = Internal.createUniqueKey(Salary.SALARY, DSL.name("salary_pkey"), new TableField[] { Salary.SALARY.ID }, true);
+    public static final UniqueKey<UserAccountRecord> USER_ACCOUNT_PKEY = Internal.createUniqueKey(UserAccount.USER_ACCOUNT, DSL.name("user_account_pkey"), new TableField[] { UserAccount.USER_ACCOUNT.ID }, true);
+    public static final UniqueKey<UserAccountRecord> USER_ACCOUNT_USERNAME_KEY = Internal.createUniqueKey(UserAccount.USER_ACCOUNT, DSL.name("user_account_username_key"), new TableField[] { UserAccount.USER_ACCOUNT.USERNAME }, true);
+    public static final UniqueKey<UserRoleRecord> USER_ROLE_PKEY = Internal.createUniqueKey(UserRole.USER_ROLE, DSL.name("user_role_pkey"), new TableField[] { UserRole.USER_ROLE.USER_ID, UserRole.USER_ROLE.ROLE }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -42,4 +52,5 @@ public class Keys {
 
     public static final ForeignKey<SalaryRecord, CompanyRecord> SALARY__SALARY_COMPANY_ID_FKEY = Internal.createForeignKey(Salary.SALARY, DSL.name("salary_company_id_fkey"), new TableField[] { Salary.SALARY.COMPANY_ID }, Keys.COMPANY_PKEY, new TableField[] { Company.COMPANY.ID }, true);
     public static final ForeignKey<SalaryRecord, RoleRecord> SALARY__SALARY_ROLE_ID_FKEY = Internal.createForeignKey(Salary.SALARY, DSL.name("salary_role_id_fkey"), new TableField[] { Salary.SALARY.ROLE_ID }, Keys.ROLE_PKEY, new TableField[] { Role.ROLE.ID }, true);
+    public static final ForeignKey<UserRoleRecord, UserAccountRecord> USER_ROLE__USER_ROLE_USER_ID_FKEY = Internal.createForeignKey(UserRole.USER_ROLE, DSL.name("user_role_user_id_fkey"), new TableField[] { UserRole.USER_ROLE.USER_ID }, Keys.USER_ACCOUNT_PKEY, new TableField[] { UserAccount.USER_ACCOUNT.ID }, true);
 }

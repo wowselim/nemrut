@@ -14,10 +14,10 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jooq:jooq-codegen:3.18.5")
-    classpath("org.postgresql:postgresql:42.6.0")
-    classpath("org.testcontainers:postgresql:1.18.3")
-    classpath("org.flywaydb:flyway-core:9.20.0")
+    classpath("org.jooq:jooq-codegen:3.18.7")
+    classpath("org.postgresql:postgresql:42.7.0")
+    classpath("org.testcontainers:postgresql:1.19.3")
+    classpath("org.flywaydb:flyway-core:9.22.3")
   }
 }
 
@@ -26,7 +26,7 @@ task("jooqGenerate") {
   val packageName = "co.selim.nemrut.jooq"
   doFirst { File(srcMainJava).resolve(packageName.replace('.', '/')).deleteRecursively() }
   doLast {
-    PostgreSQLContainer<Nothing>("postgres:14.3")
+    PostgreSQLContainer<Nothing>("postgres:16")
       .apply { start() }
       .use { pgContainer ->
         val flyway = Flyway(
@@ -68,8 +68,7 @@ task("jooqGenerate") {
 }
 
 plugins {
-  kotlin("jvm") version "1.8.22"
-  kotlin("kapt") version "1.8.22"
+  kotlin("jvm") version "1.9.21"
   application
   id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -82,35 +81,32 @@ repositories {
 }
 
 application {
-  mainClass.set("co.selim.nemrut.NemrutApplication")
+  mainClass = "co.selim.nemrut.NemrutApplication"
 }
 
 dependencies {
   implementation(kotlin("stdlib-jdk8"))
-  implementation(platform("io.vertx:vertx-stack-depchain:4.4.4"))
+  implementation(platform("io.vertx:vertx-stack-depchain:4.5.0"))
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
 
   implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
-  runtimeOnly("org.slf4j:slf4j-simple:2.0.7")
+  runtimeOnly("ch.qos.logback:logback-classic:1.4.8")
+  implementation("io.reactiverse:reactiverse-contextual-logging:1.1.2")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
-  val daggerVersion = "2.46.1"
-  implementation("com.google.dagger:dagger:$daggerVersion")
-  kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-
   implementation("io.agroal:agroal-pool:2.2")
-  implementation("org.jooq:jooq:3.18.5")
-  implementation("org.flywaydb:flyway-core:9.20.0")
-  runtimeOnly("org.postgresql:postgresql:42.6.0")
+  implementation("org.jooq:jooq:3.18.7")
+  implementation("org.flywaydb:flyway-core:9.22.3")
+  runtimeOnly("org.postgresql:postgresql:42.7.0")
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-  testImplementation("org.testcontainers:junit-jupiter:1.18.3")
-  testImplementation("org.testcontainers:postgresql:1.18.3")
-  testImplementation("io.rest-assured:kotlin-extensions:5.3.1")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+  testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+  testImplementation("org.testcontainers:postgresql:1.19.3")
+  testImplementation("io.rest-assured:kotlin-extensions:5.3.2")
 }
 
 tasks.withType<JavaCompile>().configureEach {

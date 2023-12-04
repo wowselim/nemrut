@@ -59,7 +59,7 @@ public class Company extends TableImpl<CompanyRecord> {
     /**
      * The column <code>public.company.name</code>.
      */
-    public final TableField<CompanyRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<CompanyRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.company.created_at</code>.

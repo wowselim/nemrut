@@ -7,7 +7,10 @@ package co.selim.nemrut.jooq;
 import co.selim.nemrut.jooq.tables.Company;
 import co.selim.nemrut.jooq.tables.FlywaySchemaHistory;
 import co.selim.nemrut.jooq.tables.Role;
+import co.selim.nemrut.jooq.tables.RolePermission;
 import co.selim.nemrut.jooq.tables.Salary;
+import co.selim.nemrut.jooq.tables.UserAccount;
+import co.selim.nemrut.jooq.tables.UserRole;
 
 
 /**
@@ -32,7 +35,22 @@ public class Tables {
     public static final Role ROLE = Role.ROLE;
 
     /**
+     * The table <code>public.role_permission</code>.
+     */
+    public static final RolePermission ROLE_PERMISSION = RolePermission.ROLE_PERMISSION;
+
+    /**
      * The table <code>public.salary</code>.
      */
     public static final Salary SALARY = Salary.SALARY;
+
+    /**
+     * The table <code>public.user_account</code>.
+     */
+    public static final UserAccount USER_ACCOUNT = UserAccount.USER_ACCOUNT;
+
+    /**
+     * The table <code>public.user_role</code>.
+     */
+    public static final UserRole USER_ROLE = UserRole.USER_ROLE;
 }

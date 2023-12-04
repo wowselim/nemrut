@@ -1,14 +1,15 @@
 package co.selim.nemrut.web.company
 
 import co.selim.nemrut.db.Database
-import co.selim.nemrut.ext.*
 import co.selim.nemrut.jooq.Tables
 import co.selim.nemrut.jooq.tables.pojos.Company
-import co.selim.nemrut.web.Controller
+import co.selim.nemrut.web.*
+import co.selim.nemrut.web.ext.*
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import org.jooq.impl.DSL
 import java.net.URI
+import java.util.*
 
 class CompanyController(private val database: Database) : Controller() {
 
@@ -61,7 +62,7 @@ class CompanyController(private val database: Database) : Controller() {
         val company = database.withTransaction { dsl ->
           dsl.insertInto(Tables.COMPANY)
             .set(dsl.newRecord(Tables.COMPANY, request))
-            .returning()
+            .returningResult(Tables.COMPANY)
             .fetchSingleInto(Company::class.java)
         }
 

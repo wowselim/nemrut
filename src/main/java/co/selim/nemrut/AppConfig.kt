@@ -2,7 +2,7 @@ package co.selim.nemrut
 
 import io.vertx.core.Vertx
 import io.vertx.kotlin.core.json.get
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 
 data class AppConfig(
   val httpPort: Int,
@@ -19,7 +19,7 @@ data class AppConfig(
     suspend fun load(vertx: Vertx): AppConfig {
       val fsConfigExists = vertx.fileSystem()
         .exists(CONFIG_FS_PATH)
-        .await()
+        .coAwait()
 
       val configPath = if (fsConfigExists) {
         CONFIG_FS_PATH
@@ -29,7 +29,7 @@ data class AppConfig(
 
       val jsonConfig = vertx.fileSystem()
         .readFile(configPath)
-        .await()
+        .coAwait()
         .toJsonObject()
 
       return AppConfig(

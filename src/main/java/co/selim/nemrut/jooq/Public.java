@@ -7,7 +7,10 @@ package co.selim.nemrut.jooq;
 import co.selim.nemrut.jooq.tables.Company;
 import co.selim.nemrut.jooq.tables.FlywaySchemaHistory;
 import co.selim.nemrut.jooq.tables.Role;
+import co.selim.nemrut.jooq.tables.RolePermission;
 import co.selim.nemrut.jooq.tables.Salary;
+import co.selim.nemrut.jooq.tables.UserAccount;
+import co.selim.nemrut.jooq.tables.UserRole;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,9 +49,24 @@ public class Public extends SchemaImpl {
     public final Role ROLE = Role.ROLE;
 
     /**
+     * The table <code>public.role_permission</code>.
+     */
+    public final RolePermission ROLE_PERMISSION = RolePermission.ROLE_PERMISSION;
+
+    /**
      * The table <code>public.salary</code>.
      */
     public final Salary SALARY = Salary.SALARY;
+
+    /**
+     * The table <code>public.user_account</code>.
+     */
+    public final UserAccount USER_ACCOUNT = UserAccount.USER_ACCOUNT;
+
+    /**
+     * The table <code>public.user_role</code>.
+     */
+    public final UserRole USER_ROLE = UserRole.USER_ROLE;
 
     /**
      * No further instances allowed
@@ -69,7 +87,10 @@ public class Public extends SchemaImpl {
             Company.COMPANY,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Role.ROLE,
-            Salary.SALARY
+            RolePermission.ROLE_PERMISSION,
+            Salary.SALARY,
+            UserAccount.USER_ACCOUNT,
+            UserRole.USER_ROLE
         );
     }
 }

@@ -11,7 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 abstract class IntegrationTest {
 
   @Container
-  protected val pgContainer = PostgreSQLContainer("postgres:14.3")
+  protected val pgContainer = PostgreSQLContainer("postgres:16")
 
   @BeforeEach
   protected fun setup() {

@@ -1,4 +1,4 @@
-package co.selim.nemrut.ext
+package co.selim.nemrut.environment
 
 
 enum class Environment(private val stringValue: String) {

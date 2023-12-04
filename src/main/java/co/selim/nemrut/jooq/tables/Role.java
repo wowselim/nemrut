@@ -59,7 +59,7 @@ public class Role extends TableImpl<RoleRecord> {
     /**
      * The column <code>public.role.title</code>.
      */
-    public final TableField<RoleRecord, String> TITLE = createField(DSL.name("title"), SQLDataType.VARCHAR(255), this, "");
+    public final TableField<RoleRecord, String> TITLE = createField(DSL.name("title"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.role.created_at</code>.

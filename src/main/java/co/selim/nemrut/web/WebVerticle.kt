@@ -1,10 +1,15 @@
 package co.selim.nemrut.web
 
 import co.selim.nemrut.AppConfig
+import co.selim.nemrut.web.auth.AuthnProvider
 import com.github.michaelbull.logging.InlineLogger
+import io.reactiverse.contextual.logging.ContextualData
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.LoggerHandler
+import io.vertx.ext.web.handler.PlatformHandler
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
+import java.util.*
 
 class WebVerticle(
   private val appConfig: AppConfig,
@@ -19,13 +24,28 @@ class WebVerticle(
     val router = Router.router(vertx)
 
     router.route()
+      .handler(PlatformHandler { ctx ->
+        ContextualData.put("requestId", UUID.randomUUID().toString())
+        ctx.next()
+      })
+      .handler(LoggerHandler.create())
       .failureHandler { ctx ->
         if (ctx.response().ended()) return@failureHandler
 
-        LOG.error(ctx.failure()) { "Uncaught exception in router" }
-        ctx.response()
-          .setStatusCode(500)
-          .end()
+        when (ctx.failure()) {
+          is AuthnProvider.AuthnException -> {
+            ctx.response()
+              .setStatusCode(401)
+              .end()
+          }
+
+          else -> {
+            LOG.error(ctx.failure()) { "Uncaught exception in router" }
+            ctx.response()
+              .setStatusCode(500)
+              .end()
+          }
+        }
       }
 
     controllers.forEach { controller ->
@@ -35,7 +55,7 @@ class WebVerticle(
     val server = vertx.createHttpServer()
       .requestHandler(router)
       .listen(appConfig.httpPort)
-      .await()
+      .coAwait()
 
     LOG.info { "Listening on port ${server.actualPort()}" }
   }
