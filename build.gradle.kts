@@ -90,6 +90,7 @@ dependencies {
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-lang-kotlin")
+  implementation("io.vertx:vertx-auth-jwt")
 
   implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
   runtimeOnly("ch.qos.logback:logback-classic:1.4.8")
@@ -98,6 +99,7 @@ dependencies {
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
+  implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
   implementation("io.agroal:agroal-pool:2.2")
   implementation("org.jooq:jooq:3.18.7")
   implementation("org.flywaydb:flyway-database-postgresql:10.1.0")

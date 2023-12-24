@@ -7,6 +7,8 @@ import io.agroal.api.configuration.AgroalDataSourceConfiguration
 import io.agroal.api.configuration.supplier.AgroalDataSourceConfigurationSupplier
 import io.agroal.api.security.NamePrincipal
 import io.agroal.api.security.SimplePassword
+import io.vertx.core.Future
+import io.vertx.core.Vertx
 import org.flywaydb.core.Flyway
 import org.flywaydb.core.api.configuration.FluentConfiguration
 import org.jooq.DSLContext
@@ -14,8 +16,8 @@ import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConfiguration
 import java.time.Duration
+import java.util.concurrent.Callable
 import javax.sql.DataSource
-
 
 fun dataSource(config: AppConfig): DataSource {
   val dataSourceConfig = AgroalDataSourceConfigurationSupplier()
@@ -50,7 +52,7 @@ fun flyway(dataSource: DataSource): Flyway {
   )
 }
 
-fun database(dataSource: DataSource): Database {
+fun database(vertx: Vertx, dataSource: DataSource): Database {
   val config = DefaultConfiguration().apply {
     setDataSource(dataSource)
     setSQLDialect(SQLDialect.POSTGRES)
@@ -58,14 +60,18 @@ fun database(dataSource: DataSource): Database {
   val dslContext = DSL.using(config)
 
   return object : Database {
-    override fun <T> withDsl(block: (DSLContext) -> T): T {
-      return block(dslContext)
+    override fun <T> withDsl(block: (DSLContext) -> T): Future<T> {
+      return vertx.executeBlocking(Callable {
+        block(dslContext)
+      })
     }
 
-    override fun <T> withTransaction(block: (DSLContext) -> T): T {
-      return dslContext.transactionResult { config ->
-        block(config.dsl())
-      }
+    override fun <T> withTransaction(block: (DSLContext) -> T): Future<T> {
+      return vertx.executeBlocking(Callable {
+        dslContext.transactionResult { config ->
+          block(config.dsl())
+        }
+      })
     }
   }
 }

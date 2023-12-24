@@ -18,9 +18,9 @@ enum class Environment(private val stringValue: String) {
     }
 
     private fun fromString(stringValue: String?): Environment {
-      val match = values().firstOrNull { it.stringValue == stringValue }
+      val match = entries.firstOrNull { it.stringValue == stringValue }
       return requireNotNull(match) {
-        val possibleValues = values().joinToString { env -> "'$env'" }
+        val possibleValues = entries.joinToString { env -> "'$env'" }
         "Unknown environment '$stringValue'. Must be one of [$possibleValues]."
       }
     }

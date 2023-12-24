@@ -22,4 +22,4 @@ insert into user_account(id, username, password) values
 insert into user_role(user_id, role) values
 ('2e188343-cfee-4755-928b-69527c1748a9', 'admin');
 insert into role_permission(role, permission) values
-('admin', 'read');
+('admin', 'write-company');

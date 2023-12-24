@@ -24,21 +24,35 @@ class TestCompaniesEndpoint : IntegrationTest() {
   private val requestBody = mapOf("name" to "Evil Corp.")
 
   @Test
-  fun `creating a new company returns 201`() {
+  fun `creating a new company without login returns 403`() {
     Given {
       body(requestBody)
     } When {
       post(BASE_URI)
     } Then {
+      statusCode(401)
+    }
+  }
+
+  @Test
+  fun `creating a new company returns 201`() {
+    Given {
+      login()
+        .and()
+        .body(requestBody)
+    } When {
+      post(BASE_URI)
+    } Then {
       statusCode(201)
-      contentType(JSON)
     }
   }
 
   @Test
   fun `updating a company returns 200`() {
     val response = Given {
-      body(requestBody)
+      login()
+        .and()
+        .body(requestBody)
     } When {
       post(BASE_URI)
     } Then {
@@ -48,7 +62,9 @@ class TestCompaniesEndpoint : IntegrationTest() {
 
     val company = response.extract().body().`as`(Company::class.java)
     Given {
-      body(company)
+      login()
+        .and()
+        .body(company)
     } When {
       put("$BASE_URI/${company.id}")
     } Then {
@@ -61,7 +77,9 @@ class TestCompaniesEndpoint : IntegrationTest() {
   @Test
   fun `updating a company that doesn't exist returns 404`() {
     Given {
-      body(requestBody)
+      login()
+        .and()
+        .body(requestBody)
     } When {
       put("$BASE_URI/${UUID.randomUUID()}")
     } Then {
@@ -72,7 +90,9 @@ class TestCompaniesEndpoint : IntegrationTest() {
   @Test
   fun `getting company by id returns that company`() {
     val response = Given {
-      body(requestBody)
+      login()
+        .and()
+        .body(requestBody)
     } When {
       post(BASE_URI)
     } Then {

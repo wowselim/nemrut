@@ -1,13 +1,17 @@
 package co.selim.nemrut.web.auth
 
 import co.selim.nemrut.web.Controller
+import co.selim.nemrut.web.ext.json
 import co.selim.nemrut.web.ext.requireBody
+import io.vertx.core.json.JsonObject
 import io.vertx.ext.auth.authentication.UsernamePasswordCredentials
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.coroutines.coAwait
 
-class SigninHandler(private val authnProvider: AuthnProvider) : Controller() {
+class SigninController(
+  private val authnProvider: AuthnProvider,
+) : Controller() {
 
   companion object {
     const val BASE_URI = "/signin"
@@ -27,7 +31,7 @@ class SigninHandler(private val authnProvider: AuthnProvider) : Controller() {
         val credentials = UsernamePasswordCredentials(body.username, body.password)
         val user = authnProvider.authenticate(credentials).coAwait()
         ctx.setUser(user)
-        ctx.end().coAwait()
+        ctx.response().json(JsonObject().put("username", body.username))
       }
   }
 }

@@ -5,9 +5,7 @@ import co.selim.nemrut.db.database
 import co.selim.nemrut.db.flyway
 import co.selim.nemrut.environment.Environment
 import co.selim.nemrut.web.WebVerticle
-import co.selim.nemrut.web.auth.AuthnProvider
-import co.selim.nemrut.web.auth.SigninHandler
-import co.selim.nemrut.web.auth.SignupHandler
+import co.selim.nemrut.web.auth.*
 import co.selim.nemrut.web.company.CompanyController
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -26,6 +24,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import java.util.function.Supplier
 import com.fasterxml.jackson.databind.Module as JacksonDatabindModule
+
 
 object NemrutApplication {
 
@@ -60,7 +59,7 @@ object NemrutApplication {
       }
       migrate()
     }
-    val database = database(dataSource)
+    val database = database(vertx, dataSource)
 
     val cpuCount = Runtime.getRuntime().availableProcessors()
     val deploymentOptions = DeploymentOptions().setInstances(cpuCount * 2)
@@ -69,13 +68,17 @@ object NemrutApplication {
       deploymentIds = listOf<Supplier<Verticle>>(
         Supplier {
           val authnProvider = AuthnProvider(database)
-          //val authzProvider = AuthzProvider(database)
+          val authzProvider = AuthzProvider(database)
           val controllers = setOf(
-            SignupHandler(database),
-            SigninHandler(authnProvider),
-            CompanyController(database),
+            SignupController(database),
+            SigninController(authnProvider),
+            SignoutController(),
+            CompanyController(database, authzProvider),
           )
-          WebVerticle(config, controllers)
+          WebVerticle(
+            config,
+            controllers,
+          )
         },
       )
         .map { async { vertx.deployVerticle(it, deploymentOptions).coAwait() } }

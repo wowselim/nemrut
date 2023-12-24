@@ -11,7 +11,7 @@ import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.kotlin.coroutines.coAwait
 import java.util.*
 
-class SignupHandler(private val database: Database) : Controller() {
+class SignupController(private val database: Database) : Controller() {
 
   companion object {
     const val BASE_URI = "/signup"
@@ -37,7 +37,7 @@ class SignupHandler(private val database: Database) : Controller() {
             .set(Tables.USER_ACCOUNT.PASSWORD, password)
             .returningResult(Tables.USER_ACCOUNT.ID)
             .fetchSingleInto(UUID::class.java)
-        }
+        }.coAwait()
         LOG.info { "Created user account '${body.username}' with id '$id'" }
         ctx.end().coAwait()
       }

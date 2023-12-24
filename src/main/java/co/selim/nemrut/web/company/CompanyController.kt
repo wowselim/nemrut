@@ -3,18 +3,24 @@ package co.selim.nemrut.web.company
 import co.selim.nemrut.db.Database
 import co.selim.nemrut.jooq.Tables
 import co.selim.nemrut.jooq.tables.pojos.Company
-import co.selim.nemrut.web.*
+import co.selim.nemrut.web.Controller
+import co.selim.nemrut.web.auth.AuthzHandler
+import co.selim.nemrut.web.auth.AuthzProvider
+import co.selim.nemrut.web.auth.Permission
 import co.selim.nemrut.web.ext.*
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.kotlin.coroutines.coAwait
 import org.jooq.impl.DSL
 import java.net.URI
-import java.util.*
 
-class CompanyController(private val database: Database) : Controller() {
+class CompanyController(
+  private val database: Database,
+  private val authzProvider: AuthzProvider,
+) : Controller() {
 
   companion object {
-    const val BASE_URI = "/companies"
+    const val BASE_URI = "/api/companies"
   }
 
   override fun register(router: Router) {
@@ -35,7 +41,7 @@ class CompanyController(private val database: Database) : Controller() {
           dsl.selectFrom(Tables.COMPANY)
             .where(Tables.COMPANY.ID.eq(id))
             .fetchOneInto(Company::class.java)
-        }
+        }.coAwait()
 
         ctx.response().jsonOrNotFound(company)
       }
@@ -47,7 +53,7 @@ class CompanyController(private val database: Database) : Controller() {
         val companies = database.withDsl { dsl ->
           dsl.selectFrom(Tables.COMPANY)
             .fetchInto(Company::class.java)
-        }
+        }.coAwait()
 
         ctx.response().json(companies)
       }
@@ -56,6 +62,7 @@ class CompanyController(private val database: Database) : Controller() {
   private fun handlePost(router: Router) {
     router.post(BASE_URI)
       .handler(BodyHandler.create(false))
+      .handler(AuthzHandler(authzProvider, Permission.WriteCompany))
       .coroutineHandler { ctx ->
         val request = ctx.requireBody<UpsertCompanyDto>()
 
@@ -64,7 +71,7 @@ class CompanyController(private val database: Database) : Controller() {
             .set(dsl.newRecord(Tables.COMPANY, request))
             .returningResult(Tables.COMPANY)
             .fetchSingleInto(Company::class.java)
-        }
+        }.coAwait()
 
         ctx.response().created(company, URI.create("$BASE_URI/${company.id}"))
       }
@@ -73,6 +80,7 @@ class CompanyController(private val database: Database) : Controller() {
   private fun handlePut(router: Router) {
     router.put("$BASE_URI/:id")
       .handler(BodyHandler.create(false))
+      .handler(AuthzHandler(authzProvider, Permission.WriteCompany))
       .coroutineHandler { ctx ->
         val id = ctx.requireId("id")
         val request = ctx.requireBody<UpsertCompanyDto>()
@@ -83,7 +91,7 @@ class CompanyController(private val database: Database) : Controller() {
             .where(Tables.COMPANY.ID.eq(id))
             .returning()
             .fetchOneInto(Company::class.java)
-        }
+        }.coAwait()
         ctx.response().jsonOrNotFound(company)
       }
   }
@@ -103,7 +111,7 @@ class CompanyController(private val database: Database) : Controller() {
             .where(Tables.SALARY.COMPANY_ID.eq(id))
             .groupBy(Tables.ROLE.TITLE, Tables.SALARY.CURRENCY)
             .fetchInto(RoleSalary::class.java)
-        }
+        }.coAwait()
 
         ctx.response().json(salaries)
       }

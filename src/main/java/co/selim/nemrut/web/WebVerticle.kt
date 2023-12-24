@@ -1,12 +1,13 @@
 package co.selim.nemrut.web
 
 import co.selim.nemrut.AppConfig
-import co.selim.nemrut.web.auth.AuthnProvider
 import com.github.michaelbull.logging.InlineLogger
 import io.reactiverse.contextual.logging.ContextualData
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.LoggerHandler
 import io.vertx.ext.web.handler.PlatformHandler
+import io.vertx.ext.web.handler.SessionHandler
+import io.vertx.ext.web.sstore.SessionStore
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.coAwait
 import java.util.*
@@ -29,24 +30,8 @@ class WebVerticle(
         ctx.next()
       })
       .handler(LoggerHandler.create())
-      .failureHandler { ctx ->
-        if (ctx.response().ended()) return@failureHandler
-
-        when (ctx.failure()) {
-          is AuthnProvider.AuthnException -> {
-            ctx.response()
-              .setStatusCode(401)
-              .end()
-          }
-
-          else -> {
-            LOG.error(ctx.failure()) { "Uncaught exception in router" }
-            ctx.response()
-              .setStatusCode(500)
-              .end()
-          }
-        }
-      }
+      .handler(SessionHandler.create(SessionStore.create(vertx)))
+      .failureHandler(FailureHandler)
 
     controllers.forEach { controller ->
       controller.register(router)
