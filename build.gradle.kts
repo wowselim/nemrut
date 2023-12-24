@@ -14,10 +14,10 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath("org.jooq:jooq-codegen:3.18.7")
-    classpath("org.postgresql:postgresql:42.7.0")
+    classpath("org.jooq:jooq-codegen:3.19.1")
+    classpath("org.postgresql:postgresql:42.7.1")
     classpath("org.testcontainers:postgresql:1.19.3")
-    classpath("org.flywaydb:flyway-database-postgresql:10.1.0")
+    classpath("org.flywaydb:flyway-database-postgresql:10.4.1")
   }
 }
 
@@ -93,7 +93,7 @@ dependencies {
   implementation("io.vertx:vertx-auth-jwt")
 
   implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.5")
-  runtimeOnly("ch.qos.logback:logback-classic:1.4.8")
+  runtimeOnly("ch.qos.logback:logback-classic:1.4.14")
   implementation("io.reactiverse:reactiverse-contextual-logging:1.1.2")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -101,14 +101,14 @@ dependencies {
 
   implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
   implementation("io.agroal:agroal-pool:2.2")
-  implementation("org.jooq:jooq:3.18.7")
-  implementation("org.flywaydb:flyway-database-postgresql:10.1.0")
-  runtimeOnly("org.postgresql:postgresql:42.7.0")
+  implementation("org.jooq:jooq:3.19.1")
+  implementation("org.flywaydb:flyway-database-postgresql:10.4.1")
+  runtimeOnly("org.postgresql:postgresql:42.7.1")
 
   testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
   testImplementation("org.testcontainers:junit-jupiter:1.19.3")
   testImplementation("org.testcontainers:postgresql:1.19.3")
-  testImplementation("io.rest-assured:kotlin-extensions:5.3.2")
+  testImplementation("io.rest-assured:kotlin-extensions:5.4.0")
 }
 
 tasks.withType<JavaCompile>().configureEach {
